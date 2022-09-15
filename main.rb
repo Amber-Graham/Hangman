@@ -9,6 +9,8 @@ require 'pry-byebug'
 
 def game_welcome
   puts "Welcome to Hangman!"
+  puts "You will have up to 12 guesses to figure out the mystery word!"
+  puts "Would you like to play a new game or continue an old save?"
 end
 
 def get_random_word
