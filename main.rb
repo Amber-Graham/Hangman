@@ -5,14 +5,14 @@ class Hangman
     @word = get_word
     @display_hidden_word = "_" * @word.length
     @guesses_left = 12
-    @guesses = [] #need to add this method still
+    @guesses = []
   end
 
   def game_welcome
     puts "
     Welcome to Hangman!
     You will have up to 12 guesses to figure out the mystery word! 
-    You can save your game at any time by typing 'save' or quit the game by typing 'exit'."
+    You can save your game at any time by typing 'save'."
     game_selection_input = ""
     until game_selection_input == '1' or game_selection_input == '2'
       puts "Would you like to play a new game or continue an old save?
@@ -33,7 +33,6 @@ class Hangman
     end
   end
 
-
   #def load_saved_game
     #YAML info here
     #File.open 
@@ -53,15 +52,16 @@ class Hangman
     while @guesses_left != 0
       puts @display_hidden_word
       puts "Guesses Remaining: #{@guesses_left}"
+      puts "Guessed letters: #{@guesses}"
       puts "Enter a letter: "
-      letters = gets.chomp
-      if letters == "save"
+      letter = gets.chomp
+      if letter == "save"
         puts "Your game has been saved!"
         save_game
-      elsif letters == "exit"
+      elsif letter == "exit"
         puts "See you later!"
       end
-      update_word(letters) if letters
+      update_word(letter) if letter
       player_won = player_won?
       break if player_won
     end
@@ -76,14 +76,15 @@ class Hangman
     word = words.sample.strip
   end
 
-  def update_word(letters)
-    letters.downcase!
+  def update_word(letter)
+    letter.downcase!
     current_display = @display_hidden_word.clone
-    if letters.length == 1
+    if letter.include? @word
       @display_hidden_word.length.times do |i|
-        @display_hidden_word[i] = letters if @word[i] == letters
+        @display_hidden_word[i] = letter if @word[i] == letter
       end
     else
+      @guesses << letter
       @guesses_left -= 1
     end
   end
@@ -104,7 +105,7 @@ class Hangman
     end
     case input
     when "Y"
-      game_start
+      game_welcome
     when "N"
       puts "See you soon!"
     end
