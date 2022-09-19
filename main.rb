@@ -2,7 +2,7 @@ require 'pry-byebug'
 
 class Hangman
   def inititalize
-    @word = word
+    @word = get_word
     @display_hidden_word = "_ " * @word.length
     @guesses_left = 12
     @guesses = [] #need to add this method still
