@@ -1,19 +1,18 @@
 require 'pry-byebug'
 
 class Hangman
-binding.pry
   def inititalize
-    @word = random_word
-    @display_hidden_word = "_" * random_word.length
-    @guesses = []
+    @word = get_word
+    @display_hidden_word = "_" * @word.length
     @guesses_left = 12
   end
 
   def game_welcome
     puts "
     Welcome to Hangman!
-    You will have up to 12 guesses to figure out the mystery word!"
-    game_selection_input = nil
+    You will have up to 12 guesses to figure out the mystery word! 
+    You can save your game at any time by typing 'save' or quit the game by typing 'exit'."
+    game_selection_input = ""
     until game_selection_input == '1' or game_selection_input == '2'
       puts "Would you like to play a new game or continue an old save?
       [1] New Game
@@ -35,59 +34,58 @@ binding.pry
 
   private
 
-  def load_saved_game
+  #def load_saved_game
     #YAML info here
     #File.open 
     # @word = yaml.hash[:word] ==> or something like this to pull the info
     # do it for each thing we initialize
-  end
+  #end
 
-  def save_game
+  #def save_game
     #YAML info here
     #File.open and would be set to write the info in?
     # :word = @word
     # :display_hidden_word = @display_hidden_word 
     # :current_turn = @current_turn
     # :guesses = @guesses
-  end
+  #end
 
   def game_start
     player_won = false
     while @guesses_left != 0
       puts @display_hidden_word
-      puts "Guesses Remaining: #{guesses_left}"
+      puts "Guesses Remaining: #{@guesses_left}"
       puts "Enter a letter: "
-      letters = gets.chomp.downcase!
+      letters = gets.chomp
       if letters == "save"
         save_game
         next
       end
       break if letters == "exit"
-      update_word if letters
+      update_word(letters) if letters
       player_won = player_won?
       break if player_won
     end
-    puts "Game over, the secret word was: #{@word}." if @guesses_left == 0
-    play_again
-  end
-
-  def random_word
-    file = IO.readlines('google-10000-english-no-swears.txt')
-    word = ''
-    word = file[Random.rand(100..1000)].chomp 
-      until word.length.between?(5,12)
+    if @guesses_left == 0
+      puts "Game over, the secret word was: #{@word}." 
+      play_again
     end
   end
 
+  def get_word
+    words = IO.readlines('google-10000-english-no-swears.txt').select { |word| word.size.between(5,12) }
+    words[Random.rand(words.length)].strip
+  end
+
   def update_word(letters)
-    current_display = "#{display_hidden_word}"
+    letters.downcase!
+    current_display = "#{@display_hidden_word}"
     if letters.length == 1
       @display_hidden_word.length.times do |i|
         @display_hidden_word[i] = letters if @word[i].downcase == letters
       end
-    else
-      @display_hidden_word
     end
+    @guesses_left -= 1
   end
 
   def player_won?
@@ -96,8 +94,7 @@ binding.pry
       true
     end
     play_again
-  end
-      
+  end     
 
   def play_again
     input = "" 
@@ -112,9 +109,7 @@ binding.pry
       puts "See you soon!"
     end
   end
+end
 
-  def guess_count
-    @guesses_left -= 1
-  end
-
-Hangman.new
+my_game = Hangman.new
+my_game.game_welcome
