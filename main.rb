@@ -1,9 +1,9 @@
 require 'pry-byebug'
 
 class Hangman
-  def inititalize
+  def initialize
     @word = get_word
-    @display_hidden_word = "_ " * @word.length
+    @display_hidden_word = "_" * @word.length
     @guesses_left = 12
     @guesses = [] #need to add this method still
   end
@@ -81,10 +81,8 @@ class Hangman
     current_display = @display_hidden_word.clone
     if letters.length == 1
       @display_hidden_word.length.times do |i|
-        @display_hidden_word[i] = letters if @word[i].downcase == letters
+        @display_hidden_word[i] = letters if @word[i] == letters
       end
-    elsif letters.length > 1
-      puts "Please only enter one letter at a time."
     else
       @guesses_left -= 1
     end
@@ -94,8 +92,8 @@ class Hangman
     unless @display_hidden_word.include?("_")
       puts "Congratulations! You guessed the secret word!"
       true
+      play_again
     end
-    play_again
   end     
 
   def play_again
