@@ -58,9 +58,9 @@ class Hangman
       if letter == "save"
         puts "Your game has been saved!"
         save_game
-      elsif letter == "exit"
-        puts "See you later!"
+        next
       end
+      break if letter == "exit"
       update_word(letter) if letter
       player_won = player_won?
       break if player_won
@@ -77,13 +77,14 @@ class Hangman
   end
 
   def update_word(letter)
-    letter.downcase!
+    letter.strip.downcase!
     current_display = @display_hidden_word.clone
-    if letter.include? @word
+    if @word.include? letter
       @display_hidden_word.length.times do |i|
         @display_hidden_word[i] = letter if @word[i] == letter
-      end
-    else
+    elsif letter.match?(/[^a-z]/)
+      puts "Please only enter one letter."
+    else 
       @guesses << letter
       @guesses_left -= 1
     end
@@ -91,7 +92,7 @@ class Hangman
 
   def player_won?
     unless @display_hidden_word.include?("_")
-      puts "Congratulations! You guessed the secret word!"
+      puts "Congratulations! You guessed the secret word: #{@word}!"
       true
       play_again
     end
