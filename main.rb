@@ -1,10 +1,13 @@
 require 'pry-byebug'
 
 class Hangman
+  attr_reader :word, :display_hidden_word, :guesses_left
+
   def inititalize
-    @word = get_word
-    @display_hidden_word = "_" * @word.length
+    @word = word
+    @display_hidden_word = "_ " * @word.length
     @guesses_left = 12
+    @guesses = [] #need to add this method still
   end
 
   def game_welcome
@@ -23,7 +26,7 @@ class Hangman
     when '1'
       game_start
     when '2'
-      if File.exists?("file", 'w') #i think
+      if File.exists?()#file name -- will need to look into naming system)
         load_saved_game
         game_start
       else
@@ -32,7 +35,6 @@ class Hangman
     end
   end
 
-  private
 
   #def load_saved_game
     #YAML info here
@@ -46,8 +48,6 @@ class Hangman
     #File.open and would be set to write the info in?
     # :word = @word
     # :display_hidden_word = @display_hidden_word 
-    # :current_turn = @current_turn
-    # :guesses = @guesses
   #end
 
   def game_start
@@ -58,10 +58,11 @@ class Hangman
       puts "Enter a letter: "
       letters = gets.chomp
       if letters == "save"
+        puts "Your game has been saved!"
         save_game
-        next
+      elsif letters == "exit"
+        puts "See you later!"
       end
-      break if letters == "exit"
       update_word(letters) if letters
       player_won = player_won?
       break if player_won
@@ -73,19 +74,22 @@ class Hangman
   end
 
   def get_word
-    words = IO.readlines('google-10000-english-no-swears.txt').select { |word| word.size.between(5,12) }
-    words[Random.rand(words.length)].strip
+    words = File.readlines('google-10000-english-no-swears.txt').select { |word| word.length.between?(6,13) }
+    word = words.sample.strip
   end
 
   def update_word(letters)
     letters.downcase!
-    current_display = "#{@display_hidden_word}"
+    current_display = @display_hidden_word.clone
     if letters.length == 1
       @display_hidden_word.length.times do |i|
         @display_hidden_word[i] = letters if @word[i].downcase == letters
       end
+    elsif letters.length > 1
+      puts "Please only enter one letter at a time."
+    else
+      @guesses_left -= 1
     end
-    @guesses_left -= 1
   end
 
   def player_won?
