@@ -1,8 +1,6 @@
 require 'pry-byebug'
 
 class Hangman
-  attr_reader :word, :display_hidden_word, :guesses_left
-
   def inititalize
     @word = word
     @display_hidden_word = "_ " * @word.length
