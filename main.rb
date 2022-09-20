@@ -6,13 +6,14 @@ class Hangman
     @display_hidden_word = "_" * @word.length
     @guesses_left = 12
     @guesses = []
+    game_welcome
   end
 
   def game_welcome
     puts "
     Welcome to Hangman!
     You will have up to 12 guesses to figure out the mystery word! 
-    You can save your game at any time by typing 'save'."
+    You can save your game at any time by typing 'save' or exit the game by typing 'exit'."
     game_selection_input = ""
     until game_selection_input == '1' or game_selection_input == '2'
       puts "Would you like to play a new game or continue an old save?
@@ -51,9 +52,7 @@ class Hangman
     player_won = false
     while @guesses_left != 0
       puts @display_hidden_word
-      puts "Guesses Remaining: #{@guesses_left}"
-      puts "Guessed letters: #{@guesses}"
-      puts "Enter a letter: "
+      puts "Guesses Remaining: #{@guesses_left}\n Guessed letters: #{@guesses}\n Enter a letter: "
       letter = gets.chomp
       if letter == "save"
         puts "Your game has been saved!"
@@ -72,8 +71,7 @@ class Hangman
   end
 
   def get_word
-    words = File.readlines('google-10000-english-no-swears.txt').select { |word| word.length.between?(6,13) }
-    word = words.sample.strip
+    File.readlines('google-10000-english-no-swears.txt').select { |word| word.length.between?(6,13) }.sample.strip
   end
 
   def update_word(letter)
@@ -82,7 +80,8 @@ class Hangman
     if @word.include? letter
       @display_hidden_word.length.times do |i|
         @display_hidden_word[i] = letter if @word[i] == letter
-    elsif letter.match?(/[^a-z]/)
+      end
+    elsif letter.match?(/[^a-z]/) || letter.length > 1 || letter.length < 1
       puts "Please only enter one letter."
     else 
       @guesses << letter
@@ -99,19 +98,19 @@ class Hangman
   end     
 
   def play_again
-    input = "" 
-    until input == "Y" or input == "N"
+    while true
       puts "Would you like to play again? (Y/N):\n"
-      input = gets.chomp.upcase
-    end
-    case input
-    when "Y"
-      game_welcome
-    when "N"
-      puts "See you soon!"
+      case gets.strip.upcase
+        when "Y"
+          game_welcome
+        when "N"
+          puts "See you soon!"
+          break
+        end
     end
   end
 end
 
+
+
 my_game = Hangman.new
-my_game.game_welcome
