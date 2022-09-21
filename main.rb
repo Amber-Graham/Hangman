@@ -1,5 +1,5 @@
 require 'pry-byebug'
-require_relative 'file_data'
+require './file_data'
 require 'yaml'
 
 class Hangman
@@ -25,10 +25,9 @@ class Hangman
     when '1'
       game_start
     when '2'
-        load_game
-      else
-        puts "You do not have a file saved, you must play first!"
-      end
+      load_game
+    else
+      puts "You do not have a file saved, you must play first!"
     end
   end
 
@@ -36,10 +35,9 @@ class Hangman
     player_won = false
     while @guesses_left != 0
       puts @display_hidden_word
-      puts "Guesses Remaining: #{@guesses_left}\n Guessed letters: #{@guesses}\n Enter a letter: "
+      puts "\nGuesses Remaining: #{@guesses_left}\n Guessed letters: #{@guesses}\n Enter a letter: "
       letter = gets.chomp
       if letter == "save"
-        puts "Your game has been saved!"
         save_game
         next
       end
@@ -66,33 +64,35 @@ class Hangman
         @display_hidden_word[i] = letter if @word[i] == letter
       end
     elsif letter.match?(/[^a-z]/) || letter.length > 1 || letter.length < 1
-      puts "Please only enter one letter."
-    else 
-      @guesses << letter
+      puts "\nPlease only enter one letter.\n"
+    elsif @guesses.include?(letter)
+      puts "\n\nYou have already guessed that letter.\n"
+    else
+      @guesses << letter unless @guesses.include?(letter)
       @guesses_left -= 1
     end
   end
 
   def player_won?
     unless @display_hidden_word.include?("_")
-      puts "Congratulations! You guessed the secret word: #{@word}!"
+      puts "\nCongratulations! You guessed the secret word: #{@word}!\n"
       true
-      delete_file
       play_again
     end
   end     
 
   def play_again
-    while true
-      puts "Would you like to play again? (Y/N):\n"
-      case gets.strip.upcase
-        when "Y"
-          Hangman.new
-        when "N"
-          break
-        end
+    loop do
+      print "\nWould you like to play again? (Y/N):\n"
+      answer = gets.chomp.upcase
+      if answer == "N"
+        puts "See you later!"
+        exit
+      elsif answer == "Y"
+        Hangman.new
       end
     end
-
+  end
+end
 
 my_game = Hangman.new
