@@ -23,7 +23,7 @@ module Data
 
   def find_saved_file
     show_file_list
-    file_number = user_input(display_saved_prompt, /\d+|^exit$/)
+    file_number = user_input(display_saved_prompt, /\d/)
     @saved_game = file_list[(file_number.to_i)-1]
   end
 
@@ -32,11 +32,14 @@ module Data
       print prompt
       input = gets.chomp
       input.match(regex) ? (return input) : "\nInvalid input!\n"
+      if input.downcase == "back"
+        game_welcome
+      end
     end
   end
 
   def display_saved_prompt
-    puts "\nEnter the game number that you would like to play.\n"
+    puts "\nEnter the game number that you would like to play. Type 'back' to go back to the main menu.\n"
   end
 
   def show_file_list
