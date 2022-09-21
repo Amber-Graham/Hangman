@@ -2,7 +2,7 @@
 My Hangman project for The Odin Project!
 
 This game is done purely on the command line using Ruby. 
-You can see a live demo of this game through replit: [![Run on Repl.it](https://replit.com/badge/github/Amber-Graham/Hangman)](https://replit.com/new/github/Amber-Graham/Hangman)">.
+You can see a live demo of this game through replit: [![Run on Repl.it](https://replit.com/badge/github/Amber-Graham/Hangman)](https://replit.com/new/github/Amber-Graham/Hangman)
 
 <h2>Reflection</h2>
 What I found most challenging of this was utilizing the YAML file. 
