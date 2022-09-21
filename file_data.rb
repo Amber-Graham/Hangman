@@ -3,7 +3,7 @@ module Data
     Dir.mkdir 'output' unless Dir.exist? 'output'
     @filename = "#{random_name}_game.yaml"
     File.open("output/#{@filename}", "w") { |file| file.write save_to_yaml}
-    puts "Your game is saved under the name: #{@filename}"
+    puts "\n\nYour game is saved under the name: #{@filename}\n\n"
   end
 
   def random_name
@@ -31,12 +31,12 @@ module Data
     loop do
       print prompt
       input = gets.chomp
-      input.match(regex) ? (return input) : "Invalid input!"
+      input.match(regex) ? (return input) : "\nInvalid input!\n"
     end
   end
 
   def display_saved_prompt
-    puts "Enter the game number that you would like to play."
+    puts "\nEnter the game number that you would like to play.\n"
   end
 
   def show_file_list
@@ -61,11 +61,8 @@ module Data
   def load_game
     find_saved_file
     load_saved_file
-    game_start
-  end
-
-  def delete_file
     File.delete("output/#{@saved_game}") if File.exist?("output/#{@saved_game}")
+    game_start
   end
 
   def load_saved_file
